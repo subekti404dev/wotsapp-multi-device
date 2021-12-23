@@ -50,7 +50,7 @@ function SidebarContainer(props) {
       as="aside"
       position="fixed"
       top={0}
-      w={64}
+      w={[320, 320, 64]}
       insexX={0}
       h="full"
       {...props}

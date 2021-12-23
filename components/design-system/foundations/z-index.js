@@ -8,7 +8,7 @@ const zIndices = {
   sticky: 1100,
   banner: 1200,
   overlay: 1300,
-  drawer: 1350,
+  drawer: 3000,
   modal: 1400,
   popover: 1500,
   skipLink: 1600,

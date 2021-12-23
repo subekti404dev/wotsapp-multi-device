@@ -47,6 +47,12 @@ const createTables = async () => {
     return dbRun(sql);
 }
 
+const getMessageCount = async () => {
+    const sql = `SELECT COUNT(*) as count FROM messages`;
+    const res = await dbAll(sql);
+    return res[0].count;
+}
+
 const getStatusMessage = (status_code) => {
     const statusMessages = ['ERROR', 'PENDING', 'SERVER_ACK', 'DELIVERY_ACK', 'READ', 'PLAYED'];
     return statusMessages[status_code];
@@ -105,4 +111,4 @@ const getMessages = async (q = '', limit = 20, page = 1) => {
 }
 
 
-module.exports = { db, createTables, insertMessage, updateStatus, getMessagesBySessionId, getMessages };
+module.exports = { db, createTables, getMessageCount, insertMessage, updateStatus, getMessagesBySessionId, getMessages };

@@ -5,8 +5,8 @@ import styles from './styles';
 
 const theme = {
   ...chakraTheme,
-  // ...foundations,
-  // styles
+  ...foundations,
+  styles
 };
 
 export default theme;
