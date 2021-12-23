@@ -11,8 +11,7 @@ import {
   Home,
   UserGroup,
   Folder,
-  LogoMark,
-  LogoOnDark,
+  Mail,
 } from '../icons';
 
 const SidebarLink = ({ href, children, icon }) => (
@@ -35,7 +34,7 @@ function PageLinks() {
       <SidebarLink href="/dashboard/sessions" icon={UserGroup}>
         Sessions
       </SidebarLink>
-      <SidebarLink href="/dashboard/send-message" icon={Folder}>
+      <SidebarLink href="/dashboard/send-message" icon={Mail}>
         Send Message
       </SidebarLink>
       <SidebarLink href="/dashboard/logs" icon={Folder}>
