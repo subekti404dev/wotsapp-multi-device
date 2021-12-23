@@ -25,12 +25,17 @@ const DashboardIndex = () => {
         const res = await fetch('/api/dashboard');
         const { uptime, totalMessage, activeSessions } = await res.json();
         let totalSeconds = uptime;
-
+        let days = Math.floor(totalSeconds / (3600 * 24));
+        totalSeconds %= 3600 * 24;
         let hours = Math.floor(totalSeconds / 3600);
         totalSeconds %= 3600;
         let minutes = Math.floor(totalSeconds / 60);
         let seconds = (totalSeconds % 60).toFixed(0);
-        let strUptime = `${hours}h ${minutes}m ${seconds}s`;
+        let strUptime = ``;
+        if (days > 0) strUptime += `${days}d `;
+        if (hours > 0) strUptime += `${hours}h `;
+        if (minutes > 0) strUptime += `${minutes}m `;
+        if (seconds > 0 && days === 0) strUptime += `${seconds}s`;
         setData({ ...data, uptime: strUptime, totalMessage, activeSessions });
     }
 
