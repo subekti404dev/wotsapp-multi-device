@@ -1,6 +1,5 @@
-import { getLayout } from '@/layouts/dashboard';
 import Modal from 'react-modal';
-import { Box, Button, HStack, useColorModeValue, VStack, Input, FormControl, FormLabel } from '@chakra-ui/core';
+import { Box, Button, HStack, useColorModeValue, VStack, Input } from '@chakra-ui/core';
 import ScaleLoader from "react-spinners/ScaleLoader";
 import QRCode from "react-qr-code";
 
