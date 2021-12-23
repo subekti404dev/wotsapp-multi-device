@@ -47,7 +47,7 @@ const DashboardSendMessage = () => {
                 }),
             });
             const json = await response.json();
-            setData(InitialData);
+            setData({...InitialData, session_id: data.session_id});
             setLoading(false);
         } catch (error) {
             setLoading(false);
