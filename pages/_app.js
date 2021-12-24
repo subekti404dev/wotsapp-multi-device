@@ -4,6 +4,8 @@ import { ChakraProvider, CSSReset } from '@chakra-ui/core';
 import Nprogress from '@/components/nprogress';
 import theme from '@/components/design-system';
 import DefaultLayout from '@/layouts/default';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = ({ Component, pageProps }) => {
   const getLayout =
@@ -14,6 +16,7 @@ const App = ({ Component, pageProps }) => {
       <CSSReset />
       <Nprogress />
       {getLayout(<Component {...pageProps} />)}
+      <ToastContainer />
     </ChakraProvider>
   );
 };

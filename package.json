@@ -29,6 +29,7 @@
     "react-qr-code": "2.0.3",
     "react-spinners": "0.11.0",
     "react-table": "7.7.0",
+    "react-toastify": "^8.1.0",
     "sqlite3": "5.0.2",
     "wa-multi-device": "github:subekti404dev/wa-multi-device"
   },

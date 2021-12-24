@@ -2,10 +2,10 @@ import { getLayout } from '@/layouts/dashboard';
 import { ScaleLoader } from "react-spinners";
 import { Box, Button, useColorModeValue, Input, Select, Textarea, FormControl, FormLabel } from '@chakra-ui/core';
 import React from 'react';
+import { toast } from 'react-toastify';
 
 const InitialData = {
     session_id: null,
-    // number: "6287722171686",
     number: '',
     message: '',
 }
@@ -46,12 +46,17 @@ const DashboardSendMessage = () => {
                     text: data.message,
                 }),
             });
-            const json = await response.json();
-            setData({...InitialData, session_id: data.session_id});
+            if (response.status !== 200) {
+                const data = await response.json();
+                throw new Error(data?.message || "Something went wrong");
+            }
+            setData({ ...InitialData, session_id: data.session_id });
             setLoading(false);
+            toast.success("Your message has been sent", {autoClose: 5000});
         } catch (error) {
+            console.log(error);
             setLoading(false);
-            alert(error.message);
+            toast.error(error.message, {autoClose: 5000});
         }
 
     }
