@@ -9,8 +9,10 @@ const send = async (sessionId, number, text, forceRestart = false, i = 1) => {
         let sentMsg = null;
 
         await delay(3000);
-
-        sentMsg = await sock.sendMessage(`${number}@s.whatsapp.net`, { text })
+        const waId = `${number}@s.whatsapp.net`;
+        const [checkResult] = await sock.onWhatsApp(waId);
+        if (!checkResult?.exists) throw new Error(`${number} is not registered on Whatsapp`); 
+        sentMsg = await sock.sendMessage(waId, { text });
         insertMessage({ ...sentMsg, sessionId });
 
         await delay(1000);
