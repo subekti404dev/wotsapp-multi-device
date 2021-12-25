@@ -6,7 +6,7 @@ WORKDIR /wa
 
 COPY package*.json ./
 COPY . .
-RUN yarn install
+RUN yarn install --production && yarn cache clean
 
 ENV NODE_ENV=production
 ENV LOG_ENABLED=false
