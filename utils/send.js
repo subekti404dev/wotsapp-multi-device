@@ -8,14 +8,13 @@ const send = async (sessionId, number, text, forceRestart = false, i = 1) => {
         const sock = waSocket(sessionId, {}, forceRestart);
         let sentMsg = null;
 
-        await delay(3000);
+        await delay(2000);
         const waId = `${number}@s.whatsapp.net`;
         const [checkResult] = await sock.onWhatsApp(waId);
         if (!checkResult?.exists) throw new Error(`${number} is not registered on Whatsapp`); 
         sentMsg = await sock.sendMessage(waId, { text });
         insertMessage({ ...sentMsg, sessionId });
 
-        await delay(1000);
         return sentMsg
     } catch (error) {
         const errMsg = error?.message?.toLowerCase() || '';
