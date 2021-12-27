@@ -1,8 +1,8 @@
 import { getMessages } from "@/utils/db";
 
 export default async function handler(req, res) {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 20;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
     const q = req.query.q || '';
     try {
         const messages = await getMessages(q, limit, page);

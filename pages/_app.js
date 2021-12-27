@@ -6,6 +6,7 @@ import theme from '@/components/design-system';
 import DefaultLayout from '@/layouts/default';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import 'swagger-ui-react/swagger-ui.css';
 
 const App = ({ Component, pageProps }) => {
   const getLayout =

@@ -64,40 +64,45 @@ export default function Sidebar(props) {
 
   return (
     <SidebarContainer bg={bgColor} display={props.display}>
+      <VStack>
+        <VStack
+          as="nav"
+          aria-label="Main navigation"
+          position="relative"
+          h="calc(100vh - 4rem)"
+          p={3}
+          overflowY="auto"
+          {...props}
+        >
+          <Flex w="full" align="center" h={16} p={3}>
+            <Flex boxSize="full" align="center" px={3}>
+              <Flex boxSize="full" align="center">
 
-      <VStack
-        as="nav"
-        aria-label="Main navigation"
-        position="relative"
-        h="calc(100vh - 4rem)"
-        p={3}
-        overflowY="auto"
-        {...props}
-      >
-        <Flex w="full" align="center" h={16} p={3}>
-          <Flex boxSize="full" align="center" px={3}>
-            <Flex boxSize="full" align="center">
-  
-              <Box
-                h={8}
-                w="auto"
-                display={{ base: 'block', lg: 'none' }}
-              >
-                <Image src={logo} w={140} />
-              </Box>
-              <Box
-                h={8}
-                w="auto"
-                display={{ base: 'none', lg: 'block' }}
-              >
-                <Image src={logo} w={140} />
-              </Box>
-              
+                <Box
+                  h={8}
+                  w="auto"
+                  display={{ base: 'block', lg: 'none' }}
+                >
+                  <Image src={logo} w={140} />
+                </Box>
+                <Box
+                  h={8}
+                  w="auto"
+                  display={{ base: 'none', lg: 'block' }}
+                >
+                  <Image src={logo} w={140} />
+                </Box>
+
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-        <PageLinks />
+          <PageLinks />
+        </VStack>
+        <Box>
+          {'Created by Urip'}
+        </Box>
       </VStack>
+
     </SidebarContainer>
   );
 }

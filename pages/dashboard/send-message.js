@@ -36,12 +36,13 @@ const DashboardSendMessage = () => {
     const onSendMessage = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`/api/sessions/${data.session_id}/send`, {
+            const response = await fetch(`/api/messages/send`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
+                    sessionId: data.session_id,
                     number: data.number,
                     text: data.message,
                 }),

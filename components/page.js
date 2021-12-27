@@ -17,7 +17,8 @@ export default function Page({ children }) {
         direction="column"
         px={[4, 6, null, 8]}
         mt={16}
-        h="calc(100vh - 4rem)"
+        minH="calc(100vh - 4rem)"
+        h="100%"
         bg={bgColor}
         color={primarytextColor}
       >

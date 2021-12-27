@@ -3,7 +3,7 @@ import { isSessionExist } from "@/utils/session";
 
 export default async function handler(req, res) {
     try {
-        const sessionId = req.query.session_id;
+        const sessionId = req.body.sessionId;
         const number = req.body.number;
         const text = req.body.text;
         if (!isSessionExist(sessionId)) {

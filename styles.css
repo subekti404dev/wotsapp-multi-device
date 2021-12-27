@@ -85,3 +85,21 @@ body {
   font-family: 'Open Sans', sans-serif;
   line-height: 1.25;
 }
+
+.response-col_description, .parameters-col_description{
+  width: 65% !important;
+
+}
+
+.response-col_status, .parameters-col_name{
+  width: 15% !important;
+}
+
+.col_header {
+  padding: 10px !important;
+}
+
+.response > td, .parameters > tbody > tr > td {
+  padding: 10px !important;
+  text-align: left;
+}

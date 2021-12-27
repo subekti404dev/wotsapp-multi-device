@@ -12,7 +12,7 @@ export default function QRModal({ isOpen, onClose }) {
     const onRequestQR = async () => {
         try {
             setLoadingAN(true);
-            const res = await fetch(`/api/sessions/${sessionId}/login`);
+            const res = await fetch(`/api/sessions/${sessionId}/qr`);
             const { qr } = await res.json();
             setQR(qr);
             setTimeout(onCloseModal, 1000 * 10);
