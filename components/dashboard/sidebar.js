@@ -26,20 +26,35 @@ const SidebarLink = ({ href, children, icon }) => (
 );
 
 function PageLinks() {
+  const menus = [
+    {
+      title: 'Dashboard',
+      href: '/dashboard',
+      icon: Home
+    },
+    {
+      title: 'Sessions',
+      href: '/dashboard/sessions',
+      icon: UserGroup
+    },
+    {
+      title: 'Send Message',
+      href: '/dashboard/send-message',
+      icon: Mail
+    },
+    {
+      title: 'Logs',
+      href: '/dashboard/logs',
+      icon: Folder
+    }
+  ]
   return (
     <VStack w="full" spacing={1}>
-      <SidebarLink href="/dashboard" icon={Home}>
-        Dashboard
-      </SidebarLink>
-      <SidebarLink href="/dashboard/sessions" icon={UserGroup}>
-        Sessions
-      </SidebarLink>
-      <SidebarLink href="/dashboard/send-message" icon={Mail}>
-        Send Message
-      </SidebarLink>
-      <SidebarLink href="/dashboard/logs" icon={Folder}>
-        Logs
-      </SidebarLink>
+      {menus.map((m, i) => (
+        <SidebarLink key={i} href={m.href} icon={m.icon}>
+          {m.title}
+        </SidebarLink>
+      ))}
     </VStack>
   );
 }

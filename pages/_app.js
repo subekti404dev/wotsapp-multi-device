@@ -1,5 +1,6 @@
 import '../styles.css'
 import React from 'react';
+import Head from 'next/head'
 import { ChakraProvider, CSSReset } from '@chakra-ui/core';
 import Nprogress from '@/components/nprogress';
 import theme from '@/components/design-system';
@@ -14,6 +15,9 @@ const App = ({ Component, pageProps }) => {
 
   return (
     <ChakraProvider theme={theme}>
+      <Head>
+        <title>WotsApp</title>
+      </Head>
       <CSSReset />
       <Nprogress />
       {getLayout(<Component {...pageProps} />)}

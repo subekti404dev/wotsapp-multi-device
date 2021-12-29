@@ -23,11 +23,7 @@ export default function Header() {
       <Flex w="full" align="center" justify="center">
         <Flex w="full" align="center" justify="space-between">
           <Flex align="center">
-            {/* <NextLink href="/dashboard" passHref>
-              <Button as="a" variant="ghost" px={0} fontWeight="bold">
-                {MY_APP}
-              </Button>
-            </NextLink> */}
+          
           </Flex>
           <Flex>
             <ThemeToggle mr={`-${3}`} />

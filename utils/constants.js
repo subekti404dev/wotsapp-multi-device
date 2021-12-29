@@ -1,6 +1,6 @@
 import { Github, Twitter, Mail } from '../components/icons';
 
-export const MY_APP = 'WA Dashboard';
+export const MY_APP = 'WotsApp';
 export const MY_NAME = 'Urip Subekti';
 
 export const links = [
