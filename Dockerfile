@@ -13,16 +13,15 @@ RUN yarn install --production && yarn cache clean
 
 
 
-FROM alpine
+FROM node:alpine
 WORKDIR /wa
 
 ENV NODE_ENV=production
 ENV LOG_ENABLED=false
 
-RUN yarn global add pm2
 
 COPY --from=builder /wa/node_modules ./node_modules
 COPY . .
 
 EXPOSE 3000
-CMD [ "pm2-runtime", "ecosystem.config.js" ]
+CMD [ "node", "server.js" ]
