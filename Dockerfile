@@ -1,4 +1,4 @@
-FROM alpine as builder
+FROM alpine
 
 RUN apk add --update nodejs yarn git
 
@@ -6,22 +6,14 @@ WORKDIR /wa
 
 COPY package*.json ./
 COPY . .
-
 RUN yarn install --production && yarn cache clean
-
-
-
-
-
-FROM node:alpine
-WORKDIR /wa
 
 ENV NODE_ENV=production
 ENV LOG_ENABLED=false
 
 
-COPY --from=builder /wa/node_modules ./node_modules
-COPY . .
+RUN yarn build
+RUN yarn global add pm2
 
 EXPOSE 3000
-CMD [ "node", "server.js" ]
+CMD [ "pm2-runtime", "ecosystem.config.js" ]
