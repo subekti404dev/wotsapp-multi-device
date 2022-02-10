@@ -13,10 +13,8 @@ const providers = [
       // },
       authorize: async (credentials) => {
          const user = await login(credentials.username, credentials.password);
-         console.log('authorize', user)
          if (!user) {
             throw new Error('Invalid credentials')
-
          }
          return user;
       },
@@ -42,6 +40,9 @@ const options = {
    providers,
    callbacks,
    secret: 'VERY_SECRET_KEY',
+   pages: {
+      error: '/'
+   }
 }
 
 export default (req, res) => NextAuth(req, res, options)

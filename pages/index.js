@@ -4,18 +4,16 @@ import { MY_APP } from '@/utils/constants';
 import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/client';
+import { toast } from 'react-toastify';
 
 const initForm = {
    username: '',
    password: ''
 }
 
-
-
 const Home = () => {
    const [form, setForm] = React.useState(initForm);
    const [isLoading, setIsLoading] = React.useState(false);
-
 
    const updateForm = (key, value) => {
       setForm({ ...form, [key]: value });
@@ -25,7 +23,6 @@ const Home = () => {
    const [loginSession, loginLoading] = useSession();
 
    React.useEffect(() => {
-      console.log('loginSession', loginSession)
       if (!loginLoading && loginSession?.user) {
          router.push('/dashboard')
       }
@@ -33,7 +30,7 @@ const Home = () => {
 
    React.useEffect(() => {
       if (router.query.error) {
-         console.log('error', router.query.error)
+         toast.error(router.query.error, {autoClose: 5000});
       }
    }, [router]);
 
@@ -45,11 +42,8 @@ const Home = () => {
             callbackUrl: `${window.location.origin}/dashboard`,
          });
          setIsLoading(false);
-         console.log('res', res);
       } catch (error) {
          setIsLoading(false);
-         console.log('err', error);
-
       }
    }
 

@@ -9,7 +9,6 @@ export const getLayout = (page) => {
    const router = useRouter();
 
    React.useEffect(() => {
-      console.log('loginSession', loginSession)
       if (!loginLoading && !loginSession?.user) {
          router.push('/')
       }
