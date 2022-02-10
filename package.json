@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=production PORT=7001 node server.js",
     "build": "NODE_ENV=production next build",
-    "dev": "PORT=7000 nodemon --ignore data/ server.js"
+    "dev": "PORT=7001 nodemon --ignore data/ server.js"
   },
   "dependencies": {
     "@chakra-ui/core": "1.0.0-rc.0",
@@ -21,9 +21,10 @@
     "lodash.debounce": "4.0.8",
     "md5": "^2.3.0",
     "next": "9.5.4",
+    "next-auth": "^3.1.0",
     "nprogress": "0.2.0",
     "pino": "7.5.1",
-    "react": "16.13.1",
+    "react": "16.14.0",
     "react-dom": "16.13.1",
     "react-json-view": "1.21.3",
     "react-modal": "3.14.4",

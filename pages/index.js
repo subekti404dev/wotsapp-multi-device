@@ -1,38 +1,112 @@
-import { Flex, Heading, Text, Button, Stack } from '@chakra-ui/core';
+import { Flex, Heading, Button, Input, FormControl, FormLabel } from '@chakra-ui/core';
 import { getLayout } from '@/layouts/default';
 import { MY_APP } from '@/utils/constants';
+import { signIn } from 'next-auth/client'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/client';
+
+const initForm = {
+   username: '',
+   password: ''
+}
+
+
 
 const Home = () => {
-  return (
-    <Flex direction="column" justify="center" align="center">
-      <Heading
-        as="h1"
-        mb={2}
-        size="2xl"
-        fontStyle="italic"
-        fontWeight="extrabold"
-      >
-        {MY_APP}
-      </Heading>
+   const [form, setForm] = React.useState(initForm);
+   const [isLoading, setIsLoading] = React.useState(false);
 
-      <Button
-        as="a"
-        href="/dashboard"
-        backgroundColor="gray.900"
-        color="white"
-        fontWeight="medium"
-        mt={4}
-        maxW="200px"
-        _hover={{ bg: 'gray.700' }}
-        _active={{
-          bg: 'gray.800',
-          transform: 'scale(0.95)'
-        }}
-      >
-        View Dashboard
-      </Button>
-    </Flex>
-  );
+
+   const updateForm = (key, value) => {
+      setForm({ ...form, [key]: value });
+   }
+
+   const router = useRouter();
+   const [loginSession, loginLoading] = useSession();
+
+   React.useEffect(() => {
+      console.log('loginSession', loginSession)
+      if (!loginLoading && loginSession?.user) {
+         router.push('/dashboard')
+      }
+   }, [loginSession, loginLoading]);
+
+   React.useEffect(() => {
+      if (router.query.error) {
+         console.log('error', router.query.error)
+      }
+   }, [router]);
+
+   const handleLogin = async (username, password) => {
+      try {
+         setIsLoading(true);
+         const res = await signIn('credentials', {
+            username, password,
+            callbackUrl: `${window.location.origin}/dashboard`,
+         });
+         setIsLoading(false);
+         console.log('res', res);
+      } catch (error) {
+         setIsLoading(false);
+         console.log('err', error);
+
+      }
+   }
+
+   return (
+      <Flex direction="column" justify="center" align="center">
+         <Heading
+            as="h2"
+            mb={2}
+            size="2xl"
+            fontStyle="italic"
+            fontWeight="extrabold"
+         >
+            {MY_APP}
+         </Heading>
+
+         <div style={{ maxWidth: 400, minWidth: 350 }}>
+            <FormControl marginBottom={5}>
+               <FormLabel>Username</FormLabel>
+               <Input
+                  maxW="400px"
+                  value={form.username}
+                  onChange={(e) => updateForm('username', e.target.value)}
+                  disabled={isLoading}
+               />
+            </FormControl>
+
+            <FormControl marginBottom={5}>
+               <FormLabel>Password</FormLabel>
+               <Input
+                  maxW="400px"
+                  type="password"
+                  value={form.password}
+                  onChange={(e) => updateForm('password', e.target.value)}
+                  disabled={isLoading}
+               />
+            </FormControl>
+
+            <Button
+               backgroundColor="gray.900"
+               color="white"
+               fontWeight="medium"
+               mt={4}
+               width="100%"
+               _hover={{ bg: 'gray.700' }}
+               _active={{
+                  bg: 'gray.800',
+                  transform: 'scale(0.95)'
+               }}
+               onClick={() => handleLogin(form.username, form.password)}
+               isLoading={isLoading}
+            >
+               Login
+            </Button>
+         </div>
+
+      </Flex>
+   );
 };
 
 Home.getLayout = getLayout;
