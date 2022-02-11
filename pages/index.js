@@ -1,4 +1,4 @@
-import { Flex, Heading, Button, Input, FormControl, FormLabel } from '@chakra-ui/core';
+import { Flex, Heading, Button, Input, FormControl, FormLabel, useColorModeValue } from '@chakra-ui/core';
 import { getLayout } from '@/layouts/default';
 import { MY_APP } from '@/utils/constants';
 import { signIn } from 'next-auth/client'
@@ -30,7 +30,7 @@ const Home = () => {
 
    React.useEffect(() => {
       if (router.query.error) {
-         toast.error(router.query.error, {autoClose: 5000});
+         toast.error(router.query.error, { autoClose: 5000 });
       }
    }, [router]);
 
@@ -46,6 +46,8 @@ const Home = () => {
          setIsLoading(false);
       }
    }
+
+   const isDark = useColorModeValue(false, true);
 
    return (
       <Flex direction="column" justify="center" align="center">
@@ -64,6 +66,10 @@ const Home = () => {
                <FormLabel>Username</FormLabel>
                <Input
                   maxW="400px"
+                  style={{
+                     backgroundColor: isDark ? "#2d3748" : "#f5f5f5",
+                     color: isDark ? "#f5f5f5" : "#2d3748"
+                  }}
                   value={form.username}
                   onChange={(e) => updateForm('username', e.target.value)}
                   disabled={isLoading}
@@ -75,6 +81,10 @@ const Home = () => {
                <Input
                   maxW="400px"
                   type="password"
+                  style={{
+                     backgroundColor: isDark ? "#2d3748" : "#f5f5f5",
+                     color: isDark ? "#f5f5f5" : "#2d3748"
+                  }}
                   value={form.password}
                   onChange={(e) => updateForm('password', e.target.value)}
                   disabled={isLoading}
