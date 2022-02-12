@@ -25,7 +25,6 @@ const send = async (data, forceRestart = false, i = 1) => {
       sentMsg = await sock.sendMessage(waId, payload);
       const id = await insertMessage({ ...sentMsg, sessionId, payload: data });
       const msg = getMessageByID(id);
-      console.log(msg);
       return msg;
    } catch (error) {
       const errMsg = error?.message?.toLowerCase() || '';

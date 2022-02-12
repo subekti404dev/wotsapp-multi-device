@@ -125,8 +125,8 @@ const getMessagesBySessionId = async (sessionId, q = '', limit = 20, page = 1) =
 
 const getMessages = async (q = '', limit = 20, page = 1) => {
    const offset = limit * (page - 1);
-   const fieldsToSearch = ['wa_id', 'jid', 'timestamp', 'message', 'status_code', 'status_message'];
-   const where = q ? 'WHERE ' + fieldsToSearch.map((x) => `( ${x} LIKE '%${q}%' )`).join(' OR ') : ``;
+   const fieldsToSearch = ['wa_id', 'jid', 'timestamp', 'message', 'status_code', 'status_message', 'payload'];
+   const where = q ? 'WHERE (' + fieldsToSearch.map((x) => `${x} LIKE '%${q}%'`).join(' OR ') + ')' : '';``;
    const sqlCount = `SELECT COUNT(*) as count FROM messages ${where}`;
    const resCount = await dbAll(sqlCount);
    const total = resCount[0].count;
