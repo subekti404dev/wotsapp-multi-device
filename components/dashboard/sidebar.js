@@ -11,9 +11,10 @@ import {
    Home,
    UserGroup,
    Folder,
+   Logout,
    Mail,
 } from '../icons';
-import { useSession, signOut } from 'next-auth/client';
+import { signOut } from 'next-auth/client';
 
 const SidebarLink = ({ href, onClick, children, icon }) => {
    const Content = () => (
@@ -40,6 +41,8 @@ const SidebarLink = ({ href, onClick, children, icon }) => {
 }
 
 function PageLinks() {
+   const color = useColorModeValue('#4b5563', 'white');
+
    const menus = [
       {
          title: 'Dashboard',
@@ -64,13 +67,13 @@ function PageLinks() {
       {
          title: 'Logout',
          onClick: () => signOut({ callbackUrl: `${window.location.origin}` }),
-         icon: Folder
+         icon: Logout
       }
    ]
    return (
       <VStack w="full" spacing={1}>
          {menus.map((m, i) => (
-            <SidebarLink key={i} href={m.href} onClick={m.onClick} icon={m.icon}>
+            <SidebarLink key={i} href={m.href} onClick={m.onClick} style={{color}} icon={m.icon}>
                {m.title}
             </SidebarLink>
          ))}
@@ -111,7 +114,6 @@ export default function Sidebar(props) {
                <Flex w="full" align="center" h={16} p={3}>
                   <Flex boxSize="full" align="center" px={3}>
                      <Flex boxSize="full" align="center">
-
                         <Box
                            h={8}
                            w="auto"
@@ -126,13 +128,12 @@ export default function Sidebar(props) {
                         >
                            <Image src={logo} w={140} />
                         </Box>
-
                      </Flex>
                   </Flex>
                </Flex>
                <PageLinks />
             </VStack>
-            <Box>
+            <Box style={{fontStyle: 'italic'}}>
                {'Created by Urip'}
             </Box>
          </VStack>

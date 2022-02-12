@@ -11,12 +11,12 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 const dbRun = async (sql, entry) => {
-   return new Promise((resolve, reject) => {
-      db.run(sql, entry, (err) => {
+   return new Promise(function(resolve, reject){
+      db.run(sql, entry, function(err) {
          if (err) {
             reject(err)
          } else {
-            resolve(true)
+            resolve(this.lastID)
          }
       })
    })
@@ -43,7 +43,8 @@ const createTables = async () => {
             timestamp TEXT,
             message TEXT,
             status_code INTEGER,
-            status_message TEXT
+            status_message TEXT,
+            payload TEXT
         )`;
    const table2 = `CREATE TABLE IF NOT EXISTS users (
          id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,9 +86,15 @@ const getStatusMessage = (status_code) => {
 }
 
 const insertMessage = async (data) => {
-   const sql = `INSERT INTO messages (session_id, wa_id, jid, timestamp, message, status_code, status_message) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-   const entry = [data?.sessionId, data?.key?.id, data?.key?.remoteJid, data?.messageTimestamp, JSON.stringify(data?.message), data?.status, getStatusMessage(data?.status)]
+   const sql = `INSERT INTO messages (session_id, wa_id, jid, timestamp, message, status_code, status_message, payload) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+   const entry = [data?.sessionId, data?.key?.id, data?.key?.remoteJid, data?.messageTimestamp, JSON.stringify(data?.message), data?.status, getStatusMessage(data?.status), JSON.stringify(data?.payload)]
    return dbRun(sql, entry);
+}
+
+const getMessageByID = async (id) => {
+   const sql = `SELECT * FROM messages WHERE id = ?`;
+   const res = await dbAll(sql, [id]);
+   return res[0];
 }
 
 const updateStatus = async (wa_id, jid, status_code) => {
@@ -204,7 +211,8 @@ module.exports = {
       insertMessage,
       updateStatus,
       getMessagesBySessionId,
-      getMessages
+      getMessages,
+      getMessageByID
    },
    user: {
       getAll: getUsers,

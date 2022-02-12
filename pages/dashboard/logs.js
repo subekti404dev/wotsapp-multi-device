@@ -11,15 +11,8 @@ const DashboardLogs = () => {
     const [messages, setMessages] = React.useState([]);
     const [totalPage, setTotalPage] = React.useState(0);
     const [page, setPage] = React.useState(1);
-    const [sessionId, setSessionId] = React.useState();
     const [isOpenModal, setIsOpenModal] = React.useState(false);
     const [content, setContent] = React.useState(false);
-
-    const router = useRouter();
-    const goToNewMessage = (e) => {
-        e.preventDefault();
-        router.push('/admin/send-message');
-    }
 
     React.useEffect(() => {
         fetchData();
@@ -71,8 +64,8 @@ const DashboardLogs = () => {
                         value: 'status_message'
                     },
                     {
-                        label: 'Content',
-                        value: 'message',
+                        label: 'Payload',
+                        value: 'payload',
                         contentWrapper: ({ data }) => (
                             <Button
                                 onClick={() => {
