@@ -1,11 +1,14 @@
-const { DisconnectReason, useSingleFileAuthState } = require('wa-multi-device');
+const { DisconnectReason, useSingleFileAuthState, downloadContentFromMessage } = require('wa-multi-device');
 const { getSessionPath } = require('./session');
 const makeWASocket = require('wa-multi-device').default;
 const P = require("pino");
 const { message: { updateStatus } } = require('./db');
 const sockets = {};
 const fs = require('fs');
+const { writeFile } = require('fs/promises');
 const isProd = process.env.NODE_ENV === 'production';
+const path = require('path');
+const mime = require('mime-types');
 
 function waSocket(id, options = {}, forceRestart = false) {
    console.log(`[ Sockets ]`, Object.keys(sockets));
@@ -42,6 +45,29 @@ function waSocket(id, options = {}, forceRestart = false) {
          if (d.update?.status) {
             console.log('[ Status Update ]:', JSON.stringify(d));
             updateStatus(d.key?.id, d?.key.remoteJid, d.update?.status);
+         }
+      }
+   });
+
+   sock.ev.on('messages.upsert', async ({ messages }) => {
+      const m = messages[0];
+      if (m) {
+         const messageType = Object.keys(m.message)[0];
+         if (messageType === 'extendedTextMessage') {
+            const result = {...m, sessionId: id}
+            // console.log('[ Message Upsert ]:', result);
+         }
+         //   if image
+         if (messageType === 'imageMessage') {
+            const stream = await downloadContentFromMessage(m.message.imageMessage, 'image');
+            let buffer = Buffer.from([]);
+            for await (const chunk of stream) {
+               buffer = Buffer.concat([buffer, chunk]);
+            }
+            const filePath = path.join('public', 'tmp', m.key.id + '.' + mime.extension(m.message.imageMessage.mimetype));
+            await writeFile(filePath, buffer);
+            const result = { ...m, sessionId: id, filePath: `/${filePath}` };
+            // console.log('[ Message Upsert ]:', result);
          }
       }
    });

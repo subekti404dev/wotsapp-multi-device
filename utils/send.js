@@ -3,7 +3,7 @@ const delay = require('delay');
 const { message: { insertMessage, getMessageByID } } = require('./db');
 
 const send = async (data, forceRestart = false, i = 1) => {
-   const { sessionId, number, text, image_url } = data;
+   const { sessionId, number, text, imageUrl } = data;
    console.log(`[ SEND ]`, JSON.stringify({ sessionId, number, text, forceRestart, i }))
    try {
       const sock = waSocket(sessionId, {}, forceRestart);
@@ -14,11 +14,11 @@ const send = async (data, forceRestart = false, i = 1) => {
       const [checkResult] = await sock.onWhatsApp(waId);
       if (!checkResult?.exists) throw new Error(`${number} is not registered on Whatsapp`);
       let payload = { text };
-      if (image_url) {
+      if (imageUrl) {
          payload = {
             caption: text,
             image: {
-               url: image_url,
+               url: imageUrl,
             }
          }
       }

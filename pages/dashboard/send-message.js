@@ -8,7 +8,7 @@ const InitialData = {
     session_id: null,
     number: '',
     message: '',
-    image_url: '',
+    imageUrl: '',
 }
 
 const DashboardSendMessage = () => {
@@ -46,7 +46,7 @@ const DashboardSendMessage = () => {
                     sessionId: data.session_id,
                     number: data.number,
                     text: data.message,
-                    image_url: data?.image_url || null,
+                    imageUrl: data?.imageUrl || null,
                 }),
             });
             if (response.status !== 200) {
@@ -136,9 +136,9 @@ const DashboardSendMessage = () => {
                         color: isDark ? "#f5f5f5" : "#2d3748"
                     }}
                     placeholder="https://example.com/image.jpg"
-                    value={data.image_url}
+                    value={data.imageUrl}
                     disabled={disabledInput}
-                    onChange={(e) => setData({ ...data, image_url: e.target.value })}
+                    onChange={(e) => setData({ ...data, imageUrl: e.target.value })}
                 />
             </FormControl>
             <Box h={5} />
