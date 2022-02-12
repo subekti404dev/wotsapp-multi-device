@@ -13,10 +13,11 @@ import {
    Folder,
    Logout,
    Mail,
+   Document,
 } from '../icons';
 import { signOut } from 'next-auth/client';
 
-const SidebarLink = ({ href, onClick, children, icon }) => {
+const SidebarLink = ({ href, onClick, children, icon, target }) => {
    const Content = () => (
       <Flex align="center">
          <Box as={icon} mr={3} w={6} />
@@ -34,7 +35,7 @@ const SidebarLink = ({ href, onClick, children, icon }) => {
    }
 
    return (
-      <NavLink href={href}>
+      <NavLink href={href} target={target}>
          <Content />
       </NavLink>
    );
@@ -65,6 +66,12 @@ function PageLinks() {
          icon: Folder
       },
       {
+         title: 'API Docs',
+         href: '/docs',
+         icon: Document,
+         target: '_blank'
+      },
+      {
          title: 'Logout',
          onClick: () => signOut({ callbackUrl: `${window.location.origin}` }),
          icon: Logout
@@ -73,7 +80,7 @@ function PageLinks() {
    return (
       <VStack w="full" spacing={1}>
          {menus.map((m, i) => (
-            <SidebarLink key={i} href={m.href} onClick={m.onClick} style={{color}} icon={m.icon}>
+            <SidebarLink key={i} href={m.href} target={m.target} onClick={m.onClick} style={{color}} icon={m.icon}>
                {m.title}
             </SidebarLink>
          ))}
