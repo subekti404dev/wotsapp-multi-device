@@ -131,7 +131,10 @@
                   },
                   "text": {
                     "type": "string"
-                  }
+                  },
+                  "image_url": {
+                     "type": "string"
+                   }
                 }
               }
             }
@@ -139,47 +142,12 @@
           "required": true
         },
         "responses": {
-          "200": {
+         "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "key": {
-                      "type": "object",
-                      "properties": {
-                        "remoteJid": {
-                          "type": "string"
-                        },
-                        "fromMe": {
-                          "type": "boolean"
-                        },
-                        "id": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "message": {
-                      "type": "object",
-                      "properties": {
-                        "extendedTextMessage": {
-                          "type": "object",
-                          "properties": {
-                            "text": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "messageTimestamp": {
-                      "type": "string"
-                    },
-                    "status": {
-                      "type": "string"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Message"
                 }
               }
             }
@@ -333,6 +301,9 @@
             "format": "int64"
           },
           "status_message": {
+            "type": "string"
+          },
+          "payload": {
             "type": "string"
           }
         }

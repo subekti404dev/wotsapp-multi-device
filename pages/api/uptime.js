@@ -1,6 +1,7 @@
-
+import { useApiAuth } from "@/utils/api-auth";
 
 export default async function handler(req, res) {
-    const uptime = process.uptime();
-    res.json({ uptime });
+   if (!(await useApiAuth(req, res))) return;
+   const uptime = process.uptime();
+   res.json({ uptime });
 }

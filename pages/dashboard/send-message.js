@@ -8,6 +8,7 @@ const InitialData = {
     session_id: null,
     number: '',
     message: '',
+    image_url: '',
 }
 
 const DashboardSendMessage = () => {
@@ -45,6 +46,7 @@ const DashboardSendMessage = () => {
                     sessionId: data.session_id,
                     number: data.number,
                     text: data.message,
+                    image_url: data?.image_url || null,
                 }),
             });
             if (response.status !== 200) {
@@ -55,18 +57,13 @@ const DashboardSendMessage = () => {
             setLoading(false);
             toast.success("Your message has been sent", {autoClose: 5000});
         } catch (error) {
-            console.log(error);
             setLoading(false);
             toast.error(error.message, {autoClose: 5000});
         }
-
-    }
-
-    React.useEffect(() => {
-        console.log(data);
-    }, [data]);
+    };
 
     const disabledButton = !data.session_id || !data.number || !data.message;
+    const disabledInput = loading || sessions.length === 0;
 
     return (
         <>
@@ -113,7 +110,7 @@ const DashboardSendMessage = () => {
                     }}
                     placeholder="628xxxxx"
                     value={data.number}
-                    disabled={loading}
+                    disabled={disabledInput}
                     onChange={(e) => setData({ ...data, number: e.target.value })}
                 />
             </FormControl>
@@ -121,12 +118,27 @@ const DashboardSendMessage = () => {
             <FormControl>
                 <FormLabel>Message</FormLabel>
                 <Textarea
-                    minH={300}
+                    minH={250}
                     type="text"
-                    disabled={loading}
+                    disabled={disabledInput}
                     placeholder="Message here..."
                     value={data.message}
                     onChange={(e) => setData({ ...data, message: e.target.value })}
+                />
+            </FormControl>
+            <Box h={5} />
+            <FormControl>
+                <FormLabel>Image URL (Optional)</FormLabel>
+                <Input
+                    type="text"
+                    style={{
+                        backgroundColor: isDark ? "#2d3748" : "#f5f5f5",
+                        color: isDark ? "#f5f5f5" : "#2d3748"
+                    }}
+                    placeholder="https://example.com/image.jpg"
+                    value={data.image_url}
+                    disabled={disabledInput}
+                    onChange={(e) => setData({ ...data, image_url: e.target.value })}
                 />
             </FormControl>
             <Box h={5} />

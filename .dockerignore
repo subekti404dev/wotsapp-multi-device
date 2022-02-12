@@ -3,3 +3,4 @@ data/db/*.sqlite
 data/sessions/*.json
 package-lock.json
 .next/
+.env
