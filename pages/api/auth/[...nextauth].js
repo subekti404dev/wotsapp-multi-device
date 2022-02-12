@@ -6,7 +6,9 @@ const providers = [
       name: 'Credentials',
       authorize: async (credentials) => {
          let user = null;
-         if (credentials.username === process.env.USERNAME && credentials.password === process.env.PASSWORD) {
+         const username = process.env.USERNAME || 'admin';
+         const password = process.env.PASSWORD || 'admin';
+         if (credentials.username === username && credentials.password === password) {
             return {
                id: 1,
                username: credentials.username
