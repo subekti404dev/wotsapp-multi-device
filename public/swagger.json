@@ -132,7 +132,7 @@
                   "text": {
                     "type": "string"
                   },
-                  "image_url": {
+                  "imageUrl": {
                      "type": "string"
                    }
                 }
