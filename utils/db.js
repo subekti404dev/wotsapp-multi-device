@@ -139,7 +139,9 @@ const getMessages = async (q = '', limit = 20, page = 1) => {
 const getAllWebhooks = async () => {
    if (_webhooks.length > 0) return _webhooks;
    const sql = `SELECT * FROM webhooks`;
-   return dbAll(sql);
+   const res = await dbAll(sql);
+   _webhooks = res;
+   return res;
 }
 
 const insertWebhook = async ({session_id, name, url, is_active}) => {
