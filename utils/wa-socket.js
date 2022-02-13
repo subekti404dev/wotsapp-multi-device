@@ -51,12 +51,33 @@ function waSocket(id, options = {}, forceRestart = false) {
    });
 
    sock.ev.on('messages.upsert', async ({ messages }) => {
-      console.log('[ Upsert ]:',  JSON.stringify(messages));
+//       console.log('[ Upsert ]:',  JSON.stringify(messages));
       const m = messages[0];
       if (m) {
          const messageType = Object.keys(m.message)[0];
          if (messageType === 'extendedTextMessage') {
-            const result = {...m, sessionId: id}
+            const result = {
+               key: m?.key,
+               message: {
+                  text: m?.message?.extendedTextMessage?.text
+               },
+               messageTimestamp: m?.messageTimestamp?.low,
+               pushName: m?.pushName,
+               sessionId: id
+            }
+            event.emit('message-upsert', result);
+         }
+         
+         if (m.message.conversation) {
+            const result = {
+               key: m?.key,
+               message: {
+                  text: m?.message?.conversation
+               },
+               messageTimestamp: m?.messageTimestamp,
+               pushName: m?.pushName,
+               sessionId: id
+            }
             event.emit('message-upsert', result);
          }
          //   if image
