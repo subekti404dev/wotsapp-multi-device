@@ -74,7 +74,7 @@ function waSocket(id, options = {}, forceRestart = false) {
                message: {
                   text: m?.message?.conversation
                },
-               messageTimestamp: m?.messageTimestamp,
+               messageTimestamp: m?.messageTimestamp?.low,
                pushName: m?.pushName,
                sessionId: id
             }
