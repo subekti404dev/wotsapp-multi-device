@@ -54,20 +54,8 @@ const createTables = async () => {
    return true;
 }
 
-const seedTable = async () => {
-   const adminSql = `SELECT * FROM users WHERE username = 'admin'`;
-   const users = await dbAll(adminSql);
-   if (users.length === 0) {
-      const sql = `INSERT INTO users (username, password) VALUES (?, ?)`;
-      return dbRun(sql, ['admin', md5('admin')]);
-   }
-   return true;
-}
-
-
 const initDB = async () => {
    await createTables();
-   await seedTable();
 }
 
 const getMessageCount = async () => {
