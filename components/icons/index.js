@@ -10,5 +10,6 @@ export { default as Sun } from './sun';
 export { default as Folder } from './folder';
 export { default as Home } from './home';
 export { default as Menu } from './menu';
+export { default as Webhook } from './webhook';
 export { default as UserGroup } from './user-group';
 

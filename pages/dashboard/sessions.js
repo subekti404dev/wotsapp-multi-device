@@ -1,9 +1,6 @@
 import { getLayout } from '@/layouts/dashboard';
-import Modal from 'react-modal';
 import Table from '@/components/table';
-import { Box, Button, HStack, useColorModeValue, VStack } from '@chakra-ui/core';
-import ScaleLoader from "react-spinners/ScaleLoader";
-import QRCode from "react-qr-code";
+import { Box, Button } from '@chakra-ui/core';
 import QRModal from '@/components/qr-modal';
 
 const DashboardSessions = () => {
@@ -30,7 +27,6 @@ const DashboardSessions = () => {
             <Button colorScheme='teal' onClick={() => setIsOpen(true)}>Add New</Button>
             <Box h={5}/>
             <Table
-                // title={"Sessions"}
                 headers={[{
                     label: "Session ID",
                     value: "session_id"

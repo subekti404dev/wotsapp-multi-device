@@ -11,8 +11,8 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 const dbRun = async (sql, entry) => {
-   return new Promise(function(resolve, reject){
-      db.run(sql, entry, function(err) {
+   return new Promise(function (resolve, reject) {
+      db.run(sql, entry, function (err) {
          if (err) {
             reject(err)
          } else {
@@ -46,8 +46,16 @@ const createTables = async () => {
             status_message TEXT,
             payload TEXT
         )`;
-   
-   const sqls = [table1];
+
+   const table2 = `CREATE TABLE IF NOT EXISTS webhooks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            name TEXT,
+            url TEXT,
+            is_active BOOLEAN
+         )`;
+
+   const sqls = [table1, table2];
    for (const sql of sqls) {
       await dbRun(sql);
    }
@@ -110,7 +118,7 @@ const getMessagesBySessionId = async (sessionId, q = '', limit = 20, page = 1) =
 const getMessages = async (q = '', limit = 20, page = 1) => {
    const offset = limit * (page - 1);
    const fieldsToSearch = ['wa_id', 'jid', 'timestamp', 'message', 'status_code', 'status_message', 'payload'];
-   const where = q ? 'WHERE (' + fieldsToSearch.map((x) => `${x} LIKE '%${q}%'`).join(' OR ') + ')' : '';``;
+   const where = q ? 'WHERE (' + fieldsToSearch.map((x) => `${x} LIKE '%${q}%'`).join(' OR ') + ')' : ''; ``;
    const sqlCount = `SELECT COUNT(*) as count FROM messages ${where}`;
    const resCount = await dbAll(sqlCount);
    const total = resCount[0].count;
@@ -127,6 +135,27 @@ const getMessages = async (q = '', limit = 20, page = 1) => {
    }
 }
 
+const getAllWebhooks = async () => {
+   const sql = `SELECT * FROM webhooks`;
+   return dbAll(sql);
+}
+
+const insertWebhook = async ({session_id, name, url, is_active}) => {
+   const sql = `INSERT INTO webhooks (session_id, name, url, is_active) VALUES (?, ?, ?, ?)`;
+   const entry = [session_id, name, url, is_active];
+   return dbRun(sql, entry);
+}
+
+const updateWebhook = async ({id, session_id, name, url, is_active}) => {
+   const sql = `UPDATE webhooks SET session_id = ?, name = ?, url = ?, is_active = ? WHERE id = ?`;
+   const entry = [session_id, name, url, is_active, id];
+   return dbRun(sql, entry);
+}
+
+const deleteWebhook = async (id) => {
+   const sql = `DELETE FROM webhooks WHERE id = ?`;
+   return dbRun(sql, [id]);
+}
 
 module.exports = {
    db,
@@ -139,4 +168,10 @@ module.exports = {
       getMessages,
       getMessageByID
    },
+   webhook: {
+      getAllWebhooks,
+      insertWebhook,
+      updateWebhook,
+      deleteWebhook
+   }
 };
