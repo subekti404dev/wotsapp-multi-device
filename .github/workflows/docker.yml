@@ -34,4 +34,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: subekti13/wotsapp-multi-device:${{ steps.previoustag.outputs.tag }}
+          tags: subekti13/wotsapp-multi-device:${{ steps.previoustag.outputs.tag }},subekti13/wotsapp-multi-device:latest
