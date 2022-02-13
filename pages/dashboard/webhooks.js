@@ -39,6 +39,10 @@ const DashboardWebhooks = () => {
             {'Add New'}
          </Button>
          <Box h={5} />
+         <div style={{ color: 'grey', fontSize: 13, fontStyle: 'italic' }} >
+            {'Note: For now only text messages will trigger the webhook'}
+         </div>
+         <Box h={5} />
          <Table
             headers={[
                {

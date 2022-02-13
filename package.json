@@ -16,6 +16,7 @@
     "@chakra-ui/theme-tools": "1.0.0-rc.0",
     "@emotion/react": "11",
     "@emotion/styled": "11",
+    "axios": "^0.26.0",
     "delay": "5.0.0",
     "framer-motion": "4",
     "lodash.debounce": "4.0.8",

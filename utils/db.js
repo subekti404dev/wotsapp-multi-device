@@ -1,7 +1,7 @@
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose()
 const dbPath = path.join('data', 'db', 'db.sqlite');
-const md5 = require('md5');
+let _webhooks = [];
 
 const db = new sqlite3.Database(dbPath, (err) => {
    if (err) {
@@ -64,6 +64,7 @@ const createTables = async () => {
 
 const initDB = async () => {
    await createTables();
+   await getAllWebhooks();
 }
 
 const getMessageCount = async () => {
@@ -136,6 +137,7 @@ const getMessages = async (q = '', limit = 20, page = 1) => {
 }
 
 const getAllWebhooks = async () => {
+   if (_webhooks.length > 0) return _webhooks;
    const sql = `SELECT * FROM webhooks`;
    return dbAll(sql);
 }
@@ -143,17 +145,20 @@ const getAllWebhooks = async () => {
 const insertWebhook = async ({session_id, name, url, is_active}) => {
    const sql = `INSERT INTO webhooks (session_id, name, url, is_active) VALUES (?, ?, ?, ?)`;
    const entry = [session_id, name, url, is_active];
+   _webhooks = [];
    return dbRun(sql, entry);
 }
 
 const updateWebhook = async ({id, session_id, name, url, is_active}) => {
    const sql = `UPDATE webhooks SET session_id = ?, name = ?, url = ?, is_active = ? WHERE id = ?`;
    const entry = [session_id, name, url, is_active, id];
+   _webhooks = [];
    return dbRun(sql, entry);
 }
 
 const deleteWebhook = async (id) => {
    const sql = `DELETE FROM webhooks WHERE id = ?`;
+   _webhooks = [];
    return dbRun(sql, [id]);
 }
 
