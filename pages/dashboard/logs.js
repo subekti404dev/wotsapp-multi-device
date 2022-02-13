@@ -13,6 +13,7 @@ const DashboardLogs = () => {
    const [page, setPage] = React.useState(1);
    const [isOpenModal, setIsOpenModal] = React.useState(false);
    const [content, setContent] = React.useState(false);
+   const [isLoadingResend, setIsLoadingResend] = React.useState(false);
 
    React.useEffect(() => {
       fetchData();
@@ -39,6 +40,25 @@ const DashboardLogs = () => {
       setTotalPage(messages.total % 20 === 0 ? messages.total / 20 : Math.floor(messages.total / 20) + 1);
       setPage(page);
    };
+
+   const onResend = async (payload) => {
+      try {
+         setIsLoadingResend(true);
+         const res = await fetch(`/api/messages/send`, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+         });
+         await res.json();
+         setIsLoadingResend(false);
+         setIsOpenModal(false);
+         await fetchData(1);
+      } catch (error) {
+         setIsLoadingResend(false);
+      }
+   }
 
    const isDarkMode = useColorModeValue(false, true);
 
@@ -123,12 +143,14 @@ const DashboardLogs = () => {
 
             <Box alignItems={'center'} justifyContent={'center'}>
                <div style={{ fontSize: 20, fontWeight: 'bold' }}>Content</div>
+
             </Box>
             <Box mt={5} >
-
                {ReactJson && content && <ReactJson src={JSON.parse(content)} name={false} />}
             </Box>
-
+            <Box mt={5} style={{ position: 'absolute', bottom: 10, right: 10 }}>
+               <Button isLoading={isLoadingResend} onClick={() => onResend(JSON.parse(content))}>Resend</Button>
+            </Box>
          </Modal>
       </>
    )
