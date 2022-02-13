@@ -24,8 +24,8 @@ docker run -d -p {YOUR_PORT}:3000 \
 # change YOUR_PORT, YOUR_BASE_URL, YOUR_USERNAME, YOUR_PASSWORD, and YOUR_API_TOKEN with your own.
 
 # For example:
-docker run -d -p 30:3000 \
-   -e NEXTAUTH_URL=https://wa-urip.ganteng.com \
+docker run -d -p 4000:3000 \
+   -e NEXTAUTH_URL=http://localhost:4000 \
    -e USERNAME=urip \
    -e PASSWORD=ganteng \
    -e API_TOKEN=uRipgANtEnGBAngeT \
