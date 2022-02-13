@@ -46,12 +46,8 @@ const createTables = async () => {
             status_message TEXT,
             payload TEXT
         )`;
-   const table2 = `CREATE TABLE IF NOT EXISTS users (
-         id INTEGER PRIMARY KEY AUTOINCREMENT,
-         username TEXT UNIQUE,
-         password TEXT
-     )`;
-   const sqls = [table1, table2];
+   
+   const sqls = [table1];
    for (const sql of sqls) {
       await dbRun(sql);
    }
@@ -144,65 +140,6 @@ const getMessages = async (q = '', limit = 20, page = 1) => {
 }
 
 
-
-const login = async (username, password) => {
-   const sql = `SELECT * FROM users WHERE username = ?`;
-   const rows = await dbAll(sql, [username]);
-   if (rows.length > 0) {
-      const user = rows[0];
-      if (md5(password) === user.password) {
-         return user;
-      }
-   }
-   return null;
-}
-
-const getUsers = async () => {
-   const sql = `SELECT id, username FROM users ORDER BY id`;
-   return dbAll(sql);
-}
-
-const getUserByUsername = async (username) => {
-   const sql = `SELECT id, username FROM users WHERE username = ?`;
-   const rows = await dbAll(sql, [username]);
-   if (rows.length > 0) {
-      return rows[0];
-   }
-   return null;
-}
-
-const getUserByID = async (ID) => {
-   const sql = `SELECT id, username FROM users WHERE id = '${ID}'`;
-   const rows = await dbAll(sql);
-   if (rows.length > 0) {
-      return rows[0];
-   }
-   return null;
-}
-
-const insertUser = async (username, password) => {
-   const sql = `INSERT INTO users (username, password) VALUES (?, ?)`;
-   return dbRun(sql, [username, md5(password)]);
-}
-
-const updateUser = async (id, username, password) => {
-   const user = await getUserByID(id);
-   if (user.username === 'admin' && username !== 'admin') {
-      throw new Error('Cannot update admin username');
-   }
-   const sql = `UPDATE users SET username = ?, password = ? WHERE id = ?`;
-   return dbRun(sql, [username, md5(password), id]);
-}
-
-const deleteUser = async (id) => {
-   const user = await getUserByID(id);
-   if (user.username === 'admin') {
-      throw new Error('Cannot delete admin user');
-   }
-   const sql = `DELETE FROM users WHERE id = ?`;
-   return dbRun(sql, [id]);
-}
-
 module.exports = {
    db,
    initDB,
@@ -214,13 +151,4 @@ module.exports = {
       getMessages,
       getMessageByID
    },
-   user: {
-      getAll: getUsers,
-      getByID: getUserByID,
-      login,
-      getByUsername: getUserByUsername,
-      insert: insertUser,
-      update: updateUser,
-      delete: deleteUser
-   }
 };

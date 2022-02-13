@@ -64,9 +64,9 @@ function waSocket(id, options = {}, forceRestart = false) {
             for await (const chunk of stream) {
                buffer = Buffer.concat([buffer, chunk]);
             }
-            const filePath = path.join('public', 'tmp', m.key.id + '.' + mime.extension(m.message.imageMessage.mimetype));
-            await writeFile(filePath, buffer);
-            const result = { ...m, sessionId: id, filePath: `/${filePath}` };
+            // const filePath = path.join('public', 'tmp', m.key.id + '.' + mime.extension(m.message.imageMessage.mimetype));
+            // await writeFile(filePath, buffer);
+            // const result = { ...m, sessionId: id, filePath: `/${filePath}` };
             // console.log('[ Message Upsert ]:', result);
          }
       }
