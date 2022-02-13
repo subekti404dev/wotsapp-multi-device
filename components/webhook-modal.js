@@ -247,6 +247,7 @@ export default function WebhookModal({ oldData, isOpen, onClose, mode, onAfterSa
 
             <Button
                onClick={onCloseModal}
+               style={isDarkMode ? { backgroundColor: '#252f3f' } : {}}
             >
                Close
             </Button>
@@ -257,7 +258,6 @@ export default function WebhookModal({ oldData, isOpen, onClose, mode, onAfterSa
                   colorScheme='red'
                   isLoading={loading}
                   disabled={disableButton}
-                  style={{ marginRight: 5 }}
                   onClick={onDelete}>
                   {'Delete'}
                </Button>
