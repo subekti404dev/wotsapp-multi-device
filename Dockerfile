@@ -16,6 +16,7 @@ COPY --from=build /app ./
 RUN ls -la
 ENV NODE_ENV=production
 ENV LOG_ENABLED=false
+ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
 EXPOSE 3000
 CMD [ "node", "server.js" ]
