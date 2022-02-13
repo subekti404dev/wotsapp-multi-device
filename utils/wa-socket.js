@@ -24,6 +24,7 @@ function waSocket(id, options = {}, forceRestart = false) {
    const sock = makeWASocket({
       logger: P({ level: isProd ? 'error' : 'trace', enabled: !(process.env.LOG_ENABLED === 'false') }),
       auth: state,
+      keepAliveIntervalMs: 3 * 1000, // 3 seconds
       ...options
    });
    sock.ev.on('connection.update', (update) => {
