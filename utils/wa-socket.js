@@ -9,6 +9,7 @@ const { writeFile } = require('fs/promises');
 const isProd = process.env.NODE_ENV === 'production';
 const path = require('path');
 const mime = require('mime-types');
+const {event} = require('./event');
 
 function waSocket(id, options = {}, forceRestart = false) {
    console.log(`[ Sockets ]`, Object.keys(sockets));
@@ -55,7 +56,7 @@ function waSocket(id, options = {}, forceRestart = false) {
          const messageType = Object.keys(m.message)[0];
          if (messageType === 'extendedTextMessage') {
             const result = {...m, sessionId: id}
-            // console.log('[ Message Upsert ]:', result);
+            event.emit('message-upsert', result);
          }
          //   if image
          if (messageType === 'imageMessage') {

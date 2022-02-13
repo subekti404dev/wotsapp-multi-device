@@ -2,10 +2,12 @@
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
-const { initDB } = require("./utils/db");
+const { initDB, webhook } = require("./utils/db");
 const { getSessions } = require("./utils/session");
 const waSocket = require("./utils/wa-socket");
 const port = process.env.PORT || 3000;
+const { event } = require('./utils/event');
+const axios = require('axios').default;
 
 const run = async () => {
    await initDB();
@@ -29,9 +31,17 @@ const run = async () => {
 
    }).listen(port, (err) => {
       if (err) throw err
-      console.log(`> Ready on http://localhost:${port}`)
-   })
+      console.log(`> Ready on http://localhost:${port}`);
 
+      event.on('message-upsert', async (data) => {
+         const sessionId = data.sessionId;
+         const webhooks = await webhook.getAllWebhooks();
+         const webhooksToSend = webhooks.filter(w => w.is_active && w.session_id === sessionId);
+         for (const webhook of webhooksToSend) {
+            await axios.post(webhook.url, data);
+         }
+      });
+   })
 }
 
 run();

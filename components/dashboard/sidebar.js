@@ -14,6 +14,7 @@ import {
    Logout,
    Mail,
    Document,
+   Webhook,
 } from '../icons';
 import { signOut } from 'next-auth/client';
 
@@ -64,6 +65,11 @@ function PageLinks() {
          title: 'Logs',
          href: '/dashboard/logs',
          icon: Folder
+      },
+      {
+         title: 'Webhooks',
+         href: '/dashboard/webhooks',
+         icon: Webhook
       },
       {
          title: 'API Docs',
