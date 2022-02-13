@@ -34,6 +34,7 @@ const run = async () => {
       console.log(`> Ready on http://localhost:${port}`);
 
       event.on('message-upsert', async (data) => {
+         console.log('[Incoming Message]: ', data);
          const sessionId = data.sessionId;
          const webhooks = await webhook.getAllWebhooks();
          const webhooksToSend = webhooks.filter(w => w.is_active && w.session_id === sessionId);
