@@ -149,7 +149,19 @@ const DashboardLogs = () => {
                {ReactJson && content && <ReactJson src={JSON.parse(content)} name={false} />}
             </Box>
             <Box mt={5} style={{ position: 'absolute', bottom: 10, right: 10 }}>
-               <Button isLoading={isLoadingResend} onClick={() => onResend(JSON.parse(content))}>Resend</Button>
+               <Button
+                  colorScheme='teal'
+                  isLoading={isLoadingResend}
+                  style={{marginRight: 5}}
+                  onClick={() => onResend(JSON.parse(content))}>
+                  Resend
+               </Button>
+               
+               <Button
+                  onClick={() => setIsOpenModal(false)}
+               >
+                  Close
+               </Button>
             </Box>
          </Modal>
       </>
