@@ -203,9 +203,9 @@ export default function WebhookModal({
                   colorScheme='red'
                   isLoading={loading}
                   disabled={loading}
-                  onClick={() => {
-                     onDelete(oldData.id);
-                     onAfterSave();
+                  onClick={async () => {
+                     await onDelete(oldData.id);
+                     await onAfterSave();
                      onCloseModal();
                   }}>
                   {'Delete'}
