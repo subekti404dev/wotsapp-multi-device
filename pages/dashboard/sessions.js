@@ -2,30 +2,22 @@ import { getLayout } from '@/layouts/dashboard';
 import Table from '@/components/table';
 import { Box, Button } from '@chakra-ui/core';
 import QRModal from '@/components/qr-modal';
+import { useSessions } from '@/utils/hooks/use-sessions';
+import { useModal } from '@/utils/hooks/use-modal';
 
 const DashboardSessions = () => {
-    const [sessions, setSessions] = React.useState([]);
-    const [modalIsOpen, setIsOpen] = React.useState(false);
-
-    React.useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        const res = await fetch(`/api/sessions`);
-        const sessions = await res.json();
-        setSessions(sessions);
-    };
+    const [{ sessions }, refetchSessions] = useSessions();
+    const [modalIsOpen, openModal, closeModal] = useModal()
 
     const onCloseModal = () => {
-        setIsOpen(false);
-        fetchData();
+        closeModal();
+        refetchSessions();
     }
 
     return (
         <>
-            <Button colorScheme='teal' onClick={() => setIsOpen(true)}>Add New</Button>
-            <Box h={5}/>
+            <Button colorScheme='teal' onClick={openModal}>Add New</Button>
+            <Box h={5} />
             <Table
                 headers={[{
                     label: "Session ID",
@@ -41,7 +33,7 @@ const DashboardSessions = () => {
                 }]}
                 rows={sessions}
             />
-            <QRModal isOpen={modalIsOpen} onClose={onCloseModal}/>
+            <QRModal isOpen={modalIsOpen} onClose={onCloseModal} />
         </>
     )
 };

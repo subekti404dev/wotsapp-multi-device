@@ -2,8 +2,8 @@ import { getLayout } from '@/layouts/dashboard';
 import { ScaleLoader } from "react-spinners";
 import { Box, Button, useColorModeValue, Input, Select, Textarea, FormControl, FormLabel } from '@chakra-ui/core';
 import React from 'react';
-import { useSendMessage } from '@/utils/hooks/use-send-message';
 import { useSessions } from '@/utils/hooks/use-sessions';
+import { useMessage } from '@/utils/hooks/use-message';
 
 const InitialData = {
     session_id: null,
@@ -14,8 +14,8 @@ const InitialData = {
 
 const DashboardSendMessage = () => {
     const [data, setData] = React.useState(InitialData);
-    const [sessions] = useSessions();
-    const [loading, onSendMessage] = useSendMessage();
+    const [{ sessions }] = useSessions();
+    const [loading, sendMessage] = useMessage();
 
     React.useEffect(() => {
         if (sessions.length > 0) {
@@ -112,7 +112,7 @@ const DashboardSendMessage = () => {
             <Button
                 colorScheme='teal'
                 onClick={async () => {
-                    await onSendMessage({
+                    await sendMessage({
                         sessionId: data.session_id,
                         number: data.number,
                         text: data.message,

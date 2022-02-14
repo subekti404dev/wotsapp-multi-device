@@ -5,6 +5,8 @@ import {
    FormLabel, Input, Select,
 } from '@chakra-ui/core';
 import { toast } from 'react-toastify';
+import { useSessions } from '@/utils/hooks/use-sessions';
+import React from 'react';
 
 const InitialData = {
    session_id: null,
@@ -15,31 +17,20 @@ const InitialData = {
 export default function WebhookModal({ oldData, isOpen, onClose, mode, onAfterSave }) {
 
    const [data, setData] = React.useState(InitialData);
-   const [loading, setLoading] = React.useState(false);
-   const [sessions, setSessions] = React.useState([]);
+   const [{ sessions, loading }, fetchSessions] = useSessions()
    const isCreate = mode === 'create';
 
-   const fetchData = async () => {
-      try {
-         setLoading(true);
-         const res = await fetch(`/api/sessions`);
-         const sessions = await res.json();
-         setSessions(sessions);
-         if (sessions.length > 0 && isCreate) {
-            setData({
-               ...data,
-               session_id: sessions[0].session_id,
-            });
-         }
-         setLoading(false);
-      } catch (error) {
-         toast.error(error.message, { autoClose: 5000 });
-         setLoading(false);
+   React.useEffect(() => {
+      if (sessions.length > 0 && isCreate) {
+         setData({
+            ...data,
+            session_id: sessions[0].session_id,
+         });
       }
-   };
+   }, [sessions])
 
    React.useEffect(() => {
-      isOpen && fetchData();
+      isOpen && fetchSessions();
    }, [isOpen]);
 
    React.useEffect(() => {

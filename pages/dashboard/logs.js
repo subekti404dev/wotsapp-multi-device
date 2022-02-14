@@ -5,14 +5,14 @@ import { Box, Button, useColorModeValue, Input } from '@chakra-ui/core';
 import Modal from 'react-modal';
 import { useLogs } from '@/utils/hooks/use-logs';
 import { useModal } from '@/utils/hooks/use-modal';
-import { useResendMessage } from '@/utils/hooks/use-resend-message';
+import { useMessage } from '@/utils/hooks/use-message';
 let ReactJson;
 
 const DashboardLogs = () => {
    const [content, setContent] = React.useState(false);
    const [data, action] = useLogs();
    const [isOpenModal, openModal, closeModal] = useModal();
-   const [isLoadingResend, resendMessage] = useResendMessage();
+   const [isLoadingResend, sendMessage ] = useMessage();
 
    React.useEffect(() => {
       action.setKeyword('');
@@ -28,7 +28,7 @@ const DashboardLogs = () => {
    }, []);
 
    const onResend = async (payload) => {
-      await resendMessage(payload)
+      await sendMessage(payload)
       closeModal();
       await action.setPage(1);
    }
