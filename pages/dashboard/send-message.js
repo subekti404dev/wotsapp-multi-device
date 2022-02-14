@@ -1,5 +1,4 @@
 import { getLayout } from '@/layouts/dashboard';
-import { ScaleLoader } from "react-spinners";
 import { Box, Button, useColorModeValue, Input, Select, Textarea, FormControl, FormLabel } from '@chakra-ui/core';
 import React from 'react';
 import { useSessions } from '@/utils/hooks/use-sessions';
@@ -108,7 +107,6 @@ const DashboardSendMessage = () => {
                 />
             </FormControl>
             <Box h={5} />
-            <ScaleLoader color={'rgba(14, 165, 233, 0.8)'} loading={loading} />
             <Button
                 colorScheme='teal'
                 onClick={async () => {
