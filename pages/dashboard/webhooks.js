@@ -2,28 +2,23 @@ import { getLayout } from '@/layouts/dashboard';
 import Table from '@/components/table';
 import { Box, Button, useColorModeValue } from '@chakra-ui/core';
 import WebhookModal from '@/components/webhook-modal';
+import { useWebhooks } from '@/utils/hooks/use-webhooks';
+import { useModal } from '@/utils/hooks/use-modal';
 
 const DashboardWebhooks = () => {
-   const [webhooks, setWebhooks] = React.useState([]);
-   const [modalIsOpen, setIsOpen] = React.useState(false);
+   const [modalIsOpen, openModal, closeModal] = useModal(false);
    const [mode, setMode] = React.useState('create');
    const [oldData, setOldData] = React.useState(null);
    const isDarkMode = useColorModeValue(false, true);
-
-   React.useEffect(() => {
-      fetchData();
-   }, []);
-
-   const fetchData = async () => {
-      const res = await fetch(`/api/webhooks`);
-      const webhooks = await res.json();
-      setWebhooks(webhooks);
-   };
+   const [
+      { webhooks, loading },
+      { fetchWebhooks, createWebhook, updateWebhook, deleteWebhook }
+   ] = useWebhooks();
 
    const onCloseModal = () => {
-      setIsOpen(false);
+      closeModal();
       setOldData(null);
-      fetchData();
+      fetchWebhooks();
    }
 
 
@@ -33,7 +28,7 @@ const DashboardWebhooks = () => {
             colorScheme='teal'
             onClick={() => {
                setMode('create');
-               setIsOpen(true)
+               openModal();
             }}
          >
             {'Add New'}
@@ -70,7 +65,7 @@ const DashboardWebhooks = () => {
                            const id = data;
                            setOldData(webhooks.find(webhook => webhook.id === id));
                            setMode('edit');
-                           setIsOpen(true);
+                           openModal();
                         }}
                         style={isDarkMode ? { backgroundColor: '#252f3f' } : {}}
                      >
@@ -84,9 +79,13 @@ const DashboardWebhooks = () => {
          <WebhookModal
             isOpen={modalIsOpen}
             onClose={onCloseModal}
-            onAfterSave={fetchData}
+            onAfterSave={fetchWebhooks}
             mode={mode}
             oldData={oldData}
+            onCreate={createWebhook}
+            onUpdate={updateWebhook}
+            onDelete={deleteWebhook}
+            cudLoading={loading}
          />
       </>
    )

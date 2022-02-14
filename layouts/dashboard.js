@@ -1,18 +1,12 @@
 import { Dashboard } from '@/components/dashboard';
-import { useSession, signOut } from 'next-auth/client';
+import { useAuthSession } from '@/utils/hooks/use-auth-session';
 import { useRouter } from 'next/router';
 
 const DashboardLayout = ({ children }) => <Dashboard>{children}</Dashboard>;
 
 export const getLayout = (page) => {
-   const [loginSession, loginLoading] = useSession();
    const router = useRouter();
-
-   React.useEffect(() => {
-      if (!loginLoading && !loginSession?.user) {
-         router.push('/')
-      }
-   }, [loginSession, loginLoading])
+   const [loading] = useAuthSession(router, '/dashboard');
 
    return (
       <DashboardLayout>{page}</DashboardLayout>

@@ -5,6 +5,8 @@ import {
    FormLabel, Input, Select,
 } from '@chakra-ui/core';
 import { toast } from 'react-toastify';
+import { useSessions } from '@/utils/hooks/use-sessions';
+import React from 'react';
 
 const InitialData = {
    session_id: null,
@@ -12,34 +14,27 @@ const InitialData = {
    is_active: false,
 }
 
-export default function WebhookModal({ oldData, isOpen, onClose, mode, onAfterSave }) {
+export default function WebhookModal({
+   oldData, isOpen, onClose, mode, onAfterSave,
+   onCreate, onUpdate, onDelete, cudLoading
+}) {
 
    const [data, setData] = React.useState(InitialData);
-   const [loading, setLoading] = React.useState(false);
-   const [sessions, setSessions] = React.useState([]);
+   const [{ sessions, loading: sesLoading }, fetchSessions] = useSessions()
    const isCreate = mode === 'create';
-
-   const fetchData = async () => {
-      try {
-         setLoading(true);
-         const res = await fetch(`/api/sessions`);
-         const sessions = await res.json();
-         setSessions(sessions);
-         if (sessions.length > 0 && isCreate) {
-            setData({
-               ...data,
-               session_id: sessions[0].session_id,
-            });
-         }
-         setLoading(false);
-      } catch (error) {
-         toast.error(error.message, { autoClose: 5000 });
-         setLoading(false);
-      }
-   };
+   const loading = cudLoading || sesLoading;
 
    React.useEffect(() => {
-      isOpen && fetchData();
+      if (sessions.length > 0 && isCreate) {
+         setData({
+            ...data,
+            session_id: sessions[0].session_id,
+         });
+      }
+   }, [sessions])
+
+   React.useEffect(() => {
+      isOpen && fetchSessions();
    }, [isOpen]);
 
    React.useEffect(() => {
@@ -56,74 +51,24 @@ export default function WebhookModal({ oldData, isOpen, onClose, mode, onAfterSa
       }
    }
 
-   const onCreate = async () => {
-      const response = await fetch(`/api/webhooks/create`, {
-         method: "POST",
-         headers: {
-            "Content-Type": "application/json",
-         },
-         body: JSON.stringify(data),
-      });
-      if (response.status !== 200) {
-         const data = await response.json();
-         throw new Error(data?.message || "Something went wrong");
-      }
-   }
-
-   const onUpdate = async () => {
-      const response = await fetch(`/api/webhooks/${oldData.id}/update`, {
-         method: "PUT",
-         headers: {
-            "Content-Type": "application/json",
-         },
-         body: JSON.stringify(data),
-      });
-      if (response.status !== 200) {
-         const data = await response.json();
-         throw new Error(data?.message || "Something went wrong");
-      }
-   }
-
    const onSubmit = async () => {
-      try {
-         setLoading(true);
-         if (isCreate) {
-            await onCreate();
-         } else {
-            await onUpdate();
-         }
-         setLoading(false);
-         onAfterSave();
-         onCloseModal();
-         toast.success("Webhook saved", { autoClose: 5000 });
-      } catch (e) {
-         toast.error(error.message, { autoClose: 5000 });
-         setLoading(false);
+      const urlExp = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+      var regex = new RegExp(urlExp);
+      if (!(data?.url || '').match(regex)) {
+         toast.error("Invalid url", { autoClose: 5000 });
+         return;
       }
-   }
-
-   const onDelete = async () => {
-      try {
-         setLoading(true);
-         const response = await fetch(`/api/webhooks/${oldData.id}/delete`, {
-            method: "DELETE",
-         });
-         if (response.status !== 200) {
-            const data = await response.json();
-            throw new Error(data?.message || "Something went wrong");
-         }
-         setLoading(false);
-         onAfterSave();
-         onCloseModal();
-         toast.success("Webhook deleted", { autoClose: 5000 });
-      } catch (error) {
-         toast.error(error.message, { autoClose: 5000 });
-         setLoading(false);
+      if (isCreate) {
+         await onCreate(data);
+      } else {
+         await onUpdate(oldData.id, data);
       }
+      onAfterSave();
+      onCloseModal();
+      toast.success("Webhook saved", { autoClose: 5000 });
    }
 
    const bgColor = useColorModeValue('white', '#171923');
-   const inputBgColor = useColorModeValue('white', 'grey');
    const isDarkMode = useColorModeValue(false, true);
 
    const disableButton = !data || !data.name || !data.url || !data.session_id || loading;
@@ -257,8 +202,12 @@ export default function WebhookModal({ oldData, isOpen, onClose, mode, onAfterSa
                <Button
                   colorScheme='red'
                   isLoading={loading}
-                  disabled={disableButton}
-                  onClick={onDelete}>
+                  disabled={loading}
+                  onClick={() => {
+                     onDelete(oldData.id);
+                     onAfterSave();
+                     onCloseModal();
+                  }}>
                   {'Delete'}
                </Button>
             </Box>
