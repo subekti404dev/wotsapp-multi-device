@@ -1,17 +1,18 @@
-import { getSession as getAuthSession } from "next-auth/client";
+const jwt = require('jsonwebtoken');
 
 const useApiAuth = async (req, res) => {
-   const auth = await getAuthSession({ req });
-   const token = (req?.headers?.authorization || '').split(' ')[1]
-   const authenticated = auth?.user || token === process.env.API_TOKEN;  
-   if (!authenticated) {
-      res.status(401).json({
+   const headerToken = (req?.headers?.authorization || '').split(' ')[1];
+   if (headerToken === process.env.APP_STATIC_TOKEN) return true;
+   const cookieToken = (req?.headers?.cookie || '').split(';').find(x => x.includes('x-app-token'))?.split('=')[1];
+   try {
+      jwt.verify(cookieToken, process.env.APP_JWT_SECRET, { expiresIn: '1d' });
+      return true
+   } catch (error) {
+      return res.status(401).json({
          success: false,
          message: 'Unauthorized'
-      });
-      return false;
+      })
    }
-   return true;
 }
 
 export { useApiAuth };

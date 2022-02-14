@@ -1,10 +1,9 @@
 import { Flex, Heading, Button, Input, FormControl, FormLabel, useColorModeValue } from '@chakra-ui/core';
 import { getLayout } from '@/layouts/default';
 import { MY_APP } from '@/utils/constants';
-import { signIn } from 'next-auth/client'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/client';
-import { toast } from 'react-toastify';
+import { useLogin } from '@/utils/hooks/use-login';
+import { useAuthSession } from '@/utils/hooks/use-auth-session';
 
 const initForm = {
    username: '',
@@ -12,39 +11,17 @@ const initForm = {
 }
 
 const Home = () => {
+   const router = useRouter();
    const [form, setForm] = React.useState(initForm);
-   const [isLoading, setIsLoading] = React.useState(false);
+   const [isLoading, { login }] = useLogin();
+   const [loading] = useAuthSession(router, '/dashboard');
 
    const updateForm = (key, value) => {
       setForm({ ...form, [key]: value });
    }
 
-   const router = useRouter();
-   const [loginSession, loginLoading] = useSession();
-
-   React.useEffect(() => {
-      if (!loginLoading && loginSession?.user) {
-         router.push('/dashboard')
-      }
-   }, [loginSession, loginLoading]);
-
-   React.useEffect(() => {
-      if (router.query.error) {
-         toast.error(router.query.error, { autoClose: 5000 });
-      }
-   }, [router]);
-
    const handleLogin = async (username, password) => {
-      try {
-         setIsLoading(true);
-         const res = await signIn('credentials', {
-            username, password,
-            callbackUrl: `${window.location.origin}/dashboard`,
-         });
-         setIsLoading(false);
-      } catch (error) {
-         setIsLoading(false);
-      }
+      await login(username, password, () => router.push('/dashboard'))
    }
 
    const isDark = useColorModeValue(false, true);

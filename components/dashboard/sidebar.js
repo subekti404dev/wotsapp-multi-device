@@ -16,7 +16,8 @@ import {
    Document,
    Webhook,
 } from '../icons';
-import { signOut } from 'next-auth/client';
+import { useLogin } from '@/utils/hooks/use-login';
+import { useRouter } from 'next/router';
 
 const SidebarLink = ({ href, onClick, children, icon, target }) => {
    const Content = () => (
@@ -44,6 +45,8 @@ const SidebarLink = ({ href, onClick, children, icon, target }) => {
 
 function PageLinks() {
    const color = useColorModeValue('#4b5563', 'white');
+   const [isLoading, {logout}] = useLogin();
+   const router = useRouter();
 
    const menus = [
       {
@@ -79,7 +82,9 @@ function PageLinks() {
       },
       {
          title: 'Logout',
-         onClick: () => signOut({ callbackUrl: `${window.location.origin}` }),
+         onClick: () => {
+            logout(() => router.push('/'));
+         },
          icon: Logout
       }
    ]
