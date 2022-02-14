@@ -2,7 +2,8 @@ import { getLayout } from '@/layouts/dashboard';
 import { ScaleLoader } from "react-spinners";
 import { Box, Button, useColorModeValue, Input, Select, Textarea, FormControl, FormLabel } from '@chakra-ui/core';
 import React from 'react';
-import { toast } from 'react-toastify';
+import { useSendMessage } from '@/utils/hooks/use-send-message';
+import { useSessions } from '@/utils/hooks/use-sessions';
 
 const InitialData = {
     session_id: null,
@@ -13,54 +14,19 @@ const InitialData = {
 
 const DashboardSendMessage = () => {
     const [data, setData] = React.useState(InitialData);
-    const [sessions, setSessions] = React.useState([]);
-    const [loading, setLoading] = React.useState(false);
+    const [sessions] = useSessions();
+    const [loading, onSendMessage] = useSendMessage();
 
     React.useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        const res = await fetch(`/api/sessions`);
-        const sessions = await res.json();
-        setSessions(sessions);
         if (sessions.length > 0) {
             setData({
                 ...data,
                 session_id: sessions[0].session_id,
             });
         }
-    };
+    }, [sessions])
 
     const isDark = useColorModeValue(false, true);
-
-    const onSendMessage = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`/api/messages/send`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    sessionId: data.session_id,
-                    number: data.number,
-                    text: data.message,
-                    imageUrl: data?.imageUrl || null,
-                }),
-            });
-            if (response.status !== 200) {
-                const data = await response.json();
-                throw new Error(data?.message || "Something went wrong");
-            }
-            setData({ ...InitialData, session_id: data.session_id });
-            setLoading(false);
-            toast.success("Your message has been sent", {autoClose: 5000});
-        } catch (error) {
-            setLoading(false);
-            toast.error(error.message, {autoClose: 5000});
-        }
-    };
 
     const disabledButton = !data.session_id || !data.number || !data.message;
     const disabledInput = loading || sessions.length === 0;
@@ -143,16 +109,22 @@ const DashboardSendMessage = () => {
             </FormControl>
             <Box h={5} />
             <ScaleLoader color={'rgba(14, 165, 233, 0.8)'} loading={loading} />
-
-            {!loading && (
-                <Button
-                    colorScheme='teal'
-                    onClick={onSendMessage}
-                    disabled={disabledButton}
-                >
-                    Send
-                </Button>
-            )}
+            <Button
+                colorScheme='teal'
+                onClick={async () => {
+                    await onSendMessage({
+                        sessionId: data.session_id,
+                        number: data.number,
+                        text: data.message,
+                        imageUrl: data?.imageUrl || null,
+                    })
+                    setData({ ...InitialData, session_id: data.session_id });
+                }}
+                isLoading={loading}
+                disabled={disabledButton || loading}
+            >
+                {'Send'}
+            </Button>
         </>
     )
 };

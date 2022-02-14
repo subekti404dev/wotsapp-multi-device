@@ -28,7 +28,7 @@ const DashboardLogs = () => {
    }, []);
 
    const onResend = async (payload) => {
-      resendMessage(payload)
+      await resendMessage(payload)
       closeModal();
       await action.setPage(1);
    }
