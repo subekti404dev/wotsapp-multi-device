@@ -1,22 +1,21 @@
 import { getLayout } from '@/layouts/dashboard';
-import { timestampToStrDate } from '@/utils/timestamp';
 import Table from '@/components/table';
 import Pagination from '@/components/pagination';
 import { Box, Button, useColorModeValue, Input } from '@chakra-ui/core';
-let ReactJson;
 import Modal from 'react-modal';
+import { useLogs } from '@/utils/hooks/use-logs';
+import { useModal } from '@/utils/hooks/use-modal';
+import { useResendMessage } from '@/utils/hooks/use-resend-message';
+let ReactJson;
 
 const DashboardLogs = () => {
-   const [messages, setMessages] = React.useState([]);
-   const [keyword, setKeyword] = React.useState('');
-   const [totalPage, setTotalPage] = React.useState(0);
-   const [page, setPage] = React.useState(1);
-   const [isOpenModal, setIsOpenModal] = React.useState(false);
    const [content, setContent] = React.useState(false);
-   const [isLoadingResend, setIsLoadingResend] = React.useState(false);
+   const [data, action] = useLogs();
+   const [isOpenModal, openModal, closeModal] = useModal();
+   const [isLoadingResend, resendMessage] = useResendMessage();
 
    React.useEffect(() => {
-      fetchData();
+      action.setKeyword('');
       require.ensure(
          ['react-json-view'],
          function () {
@@ -28,36 +27,10 @@ const DashboardLogs = () => {
          })
    }, []);
 
-   React.useEffect(() => {
-      fetchData(1);
-   }, [keyword])
-
-   const fetchData = async (page = 1) => {
-      let url = `/api/messages?page=${page}&q=${keyword}`;
-      const res = await fetch(url);
-      const messages = await res.json();
-      setMessages((messages.data || []).map(m => ({ ...m, jid: m.jid.split("@")[0], timestamp: timestampToStrDate(m.timestamp) })));
-      setTotalPage(messages.total % 20 === 0 ? messages.total / 20 : Math.floor(messages.total / 20) + 1);
-      setPage(page);
-   };
-
    const onResend = async (payload) => {
-      try {
-         setIsLoadingResend(true);
-         const res = await fetch(`/api/messages/send`, {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-         });
-         await res.json();
-         setIsLoadingResend(false);
-         setIsOpenModal(false);
-         await fetchData(1);
-      } catch (error) {
-         setIsLoadingResend(false);
-      }
+      resendMessage(payload)
+      closeModal();
+      await action.setPage(1);
    }
 
    const isDarkMode = useColorModeValue(false, true);
@@ -71,8 +44,8 @@ const DashboardLogs = () => {
                color: isDarkMode ? "#f5f5f5" : "#2d3748"
             }}
             placeholder="Search"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            value={data.keyword}
+            onChange={(e) => action.setKeyword(e.target.value)}
          />
          <Box h={3} />
          <Table
@@ -105,7 +78,7 @@ const DashboardLogs = () => {
                      <Button
                         onClick={() => {
                            setContent(data);
-                           setIsOpenModal(true);
+                           openModal();
                         }}
                         style={isDarkMode ? { backgroundColor: '#252f3f' } : {}}
                      >
@@ -114,13 +87,13 @@ const DashboardLogs = () => {
                   )
                },
             ]}
-            rows={messages}
+            rows={data.messages}
          />
          <Box h={5} />
-         <Pagination currentPage={page} totalPage={totalPage} onPageChange={page => fetchData(page)} />
+         <Pagination currentPage={data.page} totalPage={data.totalPage} onPageChange={page => action.setPage(page)} />
          <Modal
             isOpen={isOpenModal}
-            onRequestClose={() => setIsOpenModal(false)}
+            onRequestClose={closeModal}
             style={{
                content: {
                   top: '50%',
@@ -152,13 +125,13 @@ const DashboardLogs = () => {
                <Button
                   colorScheme='teal'
                   isLoading={isLoadingResend}
-                  style={{marginRight: 5}}
+                  style={{ marginRight: 5 }}
                   onClick={() => onResend(JSON.parse(content))}>
                   Resend
                </Button>
-               
+
                <Button
-                  onClick={() => setIsOpenModal(false)}
+                  onClick={closeModal}
                >
                   Close
                </Button>
