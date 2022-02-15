@@ -37,3 +37,6 @@ docker run -d -p 4000:3000 \
 ```
 
 You can persist your data with create volume or bind your host folder to `/app/data` in the container.
+
+
+Docker Image: https://hub.docker.com/r/subekti13/wotsapp-multi-device
