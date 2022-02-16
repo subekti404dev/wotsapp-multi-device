@@ -9,7 +9,8 @@ const { writeFile } = require('fs/promises');
 const isProd = process.env.NODE_ENV === 'production';
 const path = require('path');
 const mime = require('mime-types');
-const {event} = require('./event');
+const { event } = require('./event');
+const { triggerWebhook } = require('./webhook');
 
 function waSocket(id, options = {}, forceRestart = false) {
    console.log(`[ Sockets ]`, Object.keys(sockets));
@@ -27,6 +28,8 @@ function waSocket(id, options = {}, forceRestart = false) {
       keepAliveIntervalMs: 3 * 1000, // 3 seconds
       ...options
    });
+   sockets[id] = sock;
+
    sock.ev.on('connection.update', (update) => {
       if (update.connection === 'close') {
          const statusCode = update?.lastDisconnect?.error?.output?.statusCode;
@@ -52,7 +55,7 @@ function waSocket(id, options = {}, forceRestart = false) {
    });
 
    sock.ev.on('messages.upsert', async ({ messages }) => {
-      console.log('[ Upsert ]:',  JSON.stringify(messages));
+      console.log('[ Upsert ]:', JSON.stringify(messages));
       const m = messages[0];
       if (m) {
          const messageType = Object.keys(m.message)[0];
@@ -66,9 +69,9 @@ function waSocket(id, options = {}, forceRestart = false) {
                pushName: m?.pushName,
                sessionId: id
             }
-            event.emit('message-upsert', result);
+            triggerWebhook(result);
          }
-         
+
          if (m.message.conversation) {
             const result = {
                key: m?.key,
@@ -79,7 +82,7 @@ function waSocket(id, options = {}, forceRestart = false) {
                pushName: m?.pushName,
                sessionId: id
             }
-            event.emit('message-upsert', result);
+            triggerWebhook(result);
          }
          //   if image
          if (messageType === 'imageMessage') {
@@ -96,7 +99,6 @@ function waSocket(id, options = {}, forceRestart = false) {
       }
    });
 
-   sockets[id] = sock;
    return sock;
 }
 
