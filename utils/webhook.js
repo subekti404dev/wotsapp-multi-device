@@ -1,9 +1,9 @@
 // server.js
 
-const { webhook } = require("./utils/db");
+const { webhook } = require("./db");
 const axios = require('axios').default;
 
-const triggerWebhook = (data) => {
+const triggerWebhook = async (data) => {
     console.log('[Incoming Message]: ', JSON.stringify(data));
     const sessionId = data.sessionId;
     const webhooks = await webhook.getAllWebhooks();
