@@ -69,11 +69,11 @@ function PageLinks() {
          href: '/dashboard/logs',
          icon: Folder
       },
-      {
-         title: 'Webhooks',
-         href: '/dashboard/webhooks',
-         icon: Webhook
-      },
+//       {
+//          title: 'Webhooks',
+//          href: '/dashboard/webhooks',
+//          icon: Webhook
+//       },
       {
          title: 'API Docs',
          href: '/docs',
