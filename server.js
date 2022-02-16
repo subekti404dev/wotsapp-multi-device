@@ -32,16 +32,6 @@ const run = async () => {
    }).listen(port, (err) => {
       if (err) throw err
       console.log(`> Ready on http://localhost:${port}`);
-
-      event.on('message-upsert', async (data) => {
-         console.log('[Incoming Message]: ', JSON.stringify(data));
-         const sessionId = data.sessionId;
-         const webhooks = await webhook.getAllWebhooks();
-         const webhooksToSend = webhooks.filter(w => w.is_active && w.session_id === sessionId);
-         for (const webhook of webhooksToSend) {
-            await axios.post(webhook.url, data);
-         }
-      });
    })
 }
 
