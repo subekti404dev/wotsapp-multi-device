@@ -57,7 +57,7 @@ function waSocket(id, options = {}, forceRestart = false) {
    sock.ev.on('messages.upsert', async ({ messages }) => {
       console.log('[ Upsert ]:', JSON.stringify(messages));
       const m = messages[0];
-      if (m && m.key?.fromMe === false) {
+      if (m && m.message && m.key?.fromMe === false) {
          const messageType = Object.keys(m.message)[0];
          if (messageType === 'extendedTextMessage') {
             const result = {
