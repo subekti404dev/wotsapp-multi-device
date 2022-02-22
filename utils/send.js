@@ -29,7 +29,7 @@ const send = async (data, forceRestart = false, i = 1) => {
    } catch (error) {
       const errMsg = error?.message?.toLowerCase() || '';
       console.log(`[ SEND ERROR ]`, errMsg);
-      if ((errMsg.includes('timeout') || errMsg.includes('websocket is not open') || errMsg.includes('timed out')) && i < 3) {
+      if ((errMsg.includes('connection closed') || errMsg.includes('timeout') || errMsg.includes('websocket is not open') || errMsg.includes('timed out')) && i < 3) {
          console.log('[ SEND RETRY ]', `Retrying ${i}`);
          return send(data, true, i + 1);
       }
