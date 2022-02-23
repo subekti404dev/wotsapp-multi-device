@@ -33,6 +33,14 @@ const run = async () => {
       if (err) throw err
       console.log(`> Ready on http://localhost:${port}`);
    })
+
+   process.on("exit", function () {
+      require("child_process").spawn(process.argv.shift(), process.argv, {
+         cwd: process.cwd(),
+         detached: true,
+         stdio: "inherit"
+      });
+   });
 }
 
 run();
