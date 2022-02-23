@@ -50,39 +50,44 @@ function PageLinks() {
 
    const menus = [
       {
-         id: 1,
+         enable: true,
          title: 'Dashboard',
          href: '/dashboard',
          icon: Home
       },
       {
-         id: 2,
+         enable: true,
          title: 'Sessions',
          href: '/dashboard/sessions',
          icon: UserGroup
       },
       {
-         id: 3,
+         enable: true,
          title: 'Send Message',
          href: '/dashboard/send-message',
          icon: Mail
       },
       {
-         id: 4,
+         enable: true,
          title: 'Logs',
          href: '/dashboard/logs',
          icon: Folder
       },
-
       {
-         id: 6,
+         enable: process.env.NEXT_PUBLIC_ENABLE_WEBHOOK === 'true',
+         title: 'Webhooks',
+         href: '/dashboard/webhooks',
+         icon: Webhook
+      },
+      {
+         enable: true,
          title: 'API Docs',
          href: '/docs',
          icon: Document,
          target: '_blank'
       },
       {
-         id: 7,
+         enable: true,
          title: 'Logout',
          onClick: () => {
             logout(() => router.push('/'));
@@ -91,23 +96,15 @@ function PageLinks() {
       }
    ]
 
-   if (process.env.APP_ENABLE_WEBHOOK === 'true') {
-      menus.push({
-         id: 5,
-         title: 'Webhooks',
-         href: '/dashboard/webhooks',
-         icon: Webhook
-      });
-
-      menus = menus.sort((a, b) => a.id - b.id);
-   }
    return (
       <VStack w="full" spacing={1}>
-         {menus.map((m, i) => (
-            <SidebarLink key={i} href={m.href} target={m.target} onClick={m.onClick} style={{ color }} icon={m.icon}>
-               {m.title}
-            </SidebarLink>
-         ))}
+         {menus
+            .filter(x => x.enable)
+            .map((m, i) => (
+               <SidebarLink key={i} href={m.href} target={m.target} onClick={m.onClick} style={{ color }} icon={m.icon}>
+                  {m.title}
+               </SidebarLink>
+            ))}
       </VStack>
    );
 }
