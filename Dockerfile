@@ -18,7 +18,7 @@ COPY --from=build /app ./
 RUN ls -la
 ENV NODE_ENV=production
 ENV LOG_ENABLED=false
-ENV NEXT_PUBLIC_ENABLE_WEBHOOK=false
+ENV NEXT_PUBLIC_ENABLE_WEBHOOK=${APP_ENABLE_WEBHOOK}
 
 EXPOSE 3000
 CMD [ "node", "server.js" ]
