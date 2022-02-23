@@ -2,14 +2,13 @@
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
-const { initDB, webhook } = require("./utils/db");
+const { initDB } = require("./utils/db");
 const { getSessions } = require("./utils/session");
 const waSocket = require("./utils/wa-socket");
 const port = process.env.PORT || 3000;
-const { event } = require('./utils/event');
-const axios = require('axios').default;
 
 const run = async () => {
+   console.log(`NEXT_PUBLIC_ENABLE_WEBHOOK:`, process.env.NEXT_PUBLIC_ENABLE_WEBHOOK)
    await initDB();
    // init sessions
    for (const session of getSessions()) {
