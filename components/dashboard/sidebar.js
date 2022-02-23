@@ -45,42 +45,44 @@ const SidebarLink = ({ href, onClick, children, icon, target }) => {
 
 function PageLinks() {
    const color = useColorModeValue('#4b5563', 'white');
-   const [isLoading, {logout}] = useLogin();
+   const [isLoading, { logout }] = useLogin();
    const router = useRouter();
 
    const menus = [
       {
+         id: 1,
          title: 'Dashboard',
          href: '/dashboard',
          icon: Home
       },
       {
+         id: 2,
          title: 'Sessions',
          href: '/dashboard/sessions',
          icon: UserGroup
       },
       {
+         id: 3,
          title: 'Send Message',
          href: '/dashboard/send-message',
          icon: Mail
       },
       {
+         id: 4,
          title: 'Logs',
          href: '/dashboard/logs',
          icon: Folder
       },
+
       {
-         title: 'Webhooks',
-         href: '/dashboard/webhooks',
-         icon: Webhook
-      },
-      {
+         id: 6,
          title: 'API Docs',
          href: '/docs',
          icon: Document,
          target: '_blank'
       },
       {
+         id: 7,
          title: 'Logout',
          onClick: () => {
             logout(() => router.push('/'));
@@ -88,10 +90,21 @@ function PageLinks() {
          icon: Logout
       }
    ]
+
+   if (process.env.APP_ENABLE_WEBHOOK === 'true') {
+      menus.push({
+         id: 5,
+         title: 'Webhooks',
+         href: '/dashboard/webhooks',
+         icon: Webhook
+      });
+
+      menus = menus.sort((a, b) => a.id - b.id);
+   }
    return (
       <VStack w="full" spacing={1}>
          {menus.map((m, i) => (
-            <SidebarLink key={i} href={m.href} target={m.target} onClick={m.onClick} style={{color}} icon={m.icon}>
+            <SidebarLink key={i} href={m.href} target={m.target} onClick={m.onClick} style={{ color }} icon={m.icon}>
                {m.title}
             </SidebarLink>
          ))}
@@ -151,7 +164,7 @@ export default function Sidebar(props) {
                </Flex>
                <PageLinks />
             </VStack>
-            <Box style={{fontStyle: 'italic'}}>
+            <Box style={{ fontStyle: 'italic' }}>
                {'Created by Urip'}
             </Box>
          </VStack>

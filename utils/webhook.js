@@ -4,6 +4,7 @@ const { webhook } = require("./db");
 const axios = require('axios').default;
 
 const triggerWebhook = async (data) => {
+    if (process.env.APP_ENABLE_WEBHOOK !== 'true') return;
     console.log('[Incoming Message]: ', JSON.stringify(data));
     const sessionId = data.sessionId;
     const webhooks = await webhook.getAllWebhooks();
