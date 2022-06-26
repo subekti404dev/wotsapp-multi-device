@@ -72,7 +72,7 @@ function waSocket(id, options = {}, forceRestart = false) {
             triggerWebhook(result);
          }
 
-         if (m.message.conversation) {
+         if (m?.message?.conversation) {
             const result = {
                key: m?.key,
                message: {
